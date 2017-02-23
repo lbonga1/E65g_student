@@ -101,10 +101,18 @@ typealias Position = (row: Int, col: Int)
 enum CellState {
     // ** Your Problem 2 code goes here! Replace the contents of CellState **
     //  This shell code is here so that at all times the playground compiles and runs
+    case alive
     case empty
+    case born
+    case died
     
     var isAlive: Bool {
-        return false
+        switch self {
+        case .alive, .born:
+            return true
+        default:
+            return false
+        }
     }
 }
 /*:
@@ -117,8 +125,8 @@ enum CellState {
 // A struct representing a Cell in Conway's Game of Life
 struct Cell {
     // ** Your Problem 3 code goes here! replace the following two lines **
-    var position: Position
-    var state: CellState
+    var position = (0,0)
+    var state = CellState.empty
 }
 /*:
  ## Problem 4:
