@@ -137,28 +137,28 @@ struct Cell {
  */
 // ** Your Problem 4.1 answer goes here **
 /*
- 
+ They are used in place of an argument label.
  */
 /*:
  2. what is the type of the `transform` variable
  */
 // ** Your Problem 4.2 answer goes here **
 /*
- 
+ Tuple
  */
 /*:
  3. what is the return type of `map2`
  */
 // ** Your Problem 4.3 answer goes here **
 /*
- 
+ Generic
  */
 /*:
  4. what is `T` in this declaration
  */
 // ** Your Problem 4.4 answer goes here **
 /*
- 
+ It signfies the generic return type.
  */
 // A function which is like the standard map function but
 // which will operate only on a two dimensional array
@@ -225,14 +225,17 @@ struct Grid {
     ]
     
     // ** Your Problem 6 code goes here! Change the following two lines **
-    var rows: Int = 0
-    var cols: Int = 0
+    var rows: Int = 10
+    var cols: Int = 10
     var cells: [[Cell]] = [[Cell]]()
     
     init(_ rows: Int,
          _ cols: Int,
          cellInitializer: (Int, Int) -> CellState = { _,_ in .empty } ) {
         // ** Your Problem 7 code goes here! **
+        self.rows = rows
+        self.cols = cols
+        
         map2(rows, cols) { row, col in
             // ** Your Problem 8 code goes here! **
         }
@@ -274,14 +277,14 @@ struct Grid {
  */
 // ** your problem 10.1 answer goes here.
 /*
- 
+ It is used when calling the function.
  */
 /*:
  2. Explain in one sentence when you would use the word `cell` in relation to this function
  */
 // ** your problem 10.2 answer goes here.
 /*
- 
+ It is used as a variable name within the function.
  */
 // An extension of Grid to add a function for computing the positions
 // of the 8 neighboring cells of a given cell
@@ -303,21 +306,21 @@ extension Grid {
  */
 // ** Your Problem 11.1 answer goes here **
 /*
- 
+ Combine (add) the three ints into one.
  */
 /*:
  2. what is the return type of reduce2
  */
 // ** Your Problem 11.2 answer goes here **
 /*
- 
+ Int
  */
 /*:
  3. why is there no T parameter here as in map2 above
  */
 // ** Your Problem 11.3 answer goes here **
 /*
- 
+ Because an int is being returned, not a generic type.
  */
 
 // A function which is useful for counting things in an array of arrays of things
