@@ -6,6 +6,7 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -38,18 +39,27 @@
                                     <action selector="stepAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="wPh-fu-rV5"/>
                                 </connections>
                             </button>
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dKE-x6-27g">
+                                <rect key="frame" x="16" y="474" width="343" height="193"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </webView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="Qo5-Pl-Yoy" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" multiplier="0.75" id="4KQ-rl-rxV"/>
                             <constraint firstItem="Qo5-Pl-Yoy" firstAttribute="top" secondItem="xcr-Sr-rAk" secondAttribute="bottom" constant="8" id="MdK-aD-dc6"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="dKE-x6-27g" secondAttribute="bottom" id="MqI-rR-Z7j"/>
                             <constraint firstItem="Qo5-Pl-Yoy" firstAttribute="leading" secondItem="xcr-Sr-rAk" secondAttribute="leading" id="g7W-Bd-9g5"/>
+                            <constraint firstItem="dKE-x6-27g" firstAttribute="top" secondItem="Qo5-Pl-Yoy" secondAttribute="bottom" id="ktJ-PK-Ghe"/>
+                            <constraint firstItem="dKE-x6-27g" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="l9W-uf-rno"/>
                             <constraint firstItem="Qo5-Pl-Yoy" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="lkf-UI-FAo"/>
                             <constraint firstItem="Qo5-Pl-Yoy" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="nXm-h6-BEM"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="dKE-x6-27g" secondAttribute="trailing" id="wD0-ZR-R3a"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="gridView" destination="Qo5-Pl-Yoy" id="1g6-Vg-tbn"/>
+                        <outlet property="wv" destination="dKE-x6-27g" id="buP-nF-q6b"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
