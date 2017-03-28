@@ -10,16 +10,24 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var gridView: GridView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        gridView.size = 20
+        gridView.livingColor = UIColor.green
+        gridView.bornColor = UIColor.green.withAlphaComponent(0.6)
+        gridView.emptyColor = UIColor.darkGray
+        gridView.diedColor = UIColor.darkGray.withAlphaComponent(0.6)
+        gridView.gridColor = UIColor.black
+        gridView.gridWidth = 2.0
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    @IBAction func stepAction(_ sender: Any) {
+        gridView.grid = gridView.grid.next()
+        gridView.setNeedsDisplay()
     }
-
 
 }
 
