@@ -1,6 +1,7 @@
 //
 //  Grid.swift
 //
+
 import Foundation
 
 public typealias GridPosition = (row: Int, col: Int)
@@ -187,5 +188,3 @@ class StandardEngine: EngineProtocol {
         return grid
     }
 }
-
-
