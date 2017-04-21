@@ -10,54 +10,76 @@ import UIKit
 
 @IBDesignable class GridView: UIView {
 
-    @IBInspectable var size: Int = 20 {
-        didSet {
-            grid = Grid(size, size)
-        }
-    }
-    var grid = Grid(3,3)
     @IBInspectable var livingColor = UIColor.darkGray
-    @IBInspectable var emptyColor = UIColor.gray
+    @IBInspectable var emptyColor = UIColor.clear
     @IBInspectable var bornColor = UIColor.black
     @IBInspectable var diedColor = UIColor.lightGray
     @IBInspectable var gridColor = UIColor.black
     @IBInspectable var gridWidth: CGFloat = 1.0
+    // Updated since class
+    let gridSize = StandardEngine.engine.grid.size
     
     override func draw(_ rect: CGRect) {
-        
-        let gridSize = CGSize(
-            width: rect.size.width / CGFloat(size - 1),
-            height: rect.size.height / CGFloat(size - 1)
-        )
-        let base = rect.origin
-        (0 ..< size).forEach { i in
-            (0 ..< size).forEach { j in
-                let origin = CGPoint(
-                    x: base.x + (CGFloat(i) * gridSize.width),
-                    y: base.y + (CGFloat(j) * gridSize.height)
-                )
-                let subRect = CGRect(
-                    origin: origin,
-                    size: gridSize
-                )
-                
-                drawCircle(row: i, col: j, rect: subRect)
-            }
-        }
-        
-        (0..<size).forEach {
-        drawLine(start: CGPoint(x: CGFloat($0)/CGFloat(size - 1) * rect.size.width, y: 0.0),
-                 end: CGPoint(x: CGFloat($0)/CGFloat(size - 1) * rect.size.width, y: rect.size.height))
-        
-        drawLine(start: CGPoint(x: 0.0, y: CGFloat($0)/CGFloat(size - 1) * rect.size.height),
-                 end: CGPoint(x: rect.size.width, y: CGFloat($0)/CGFloat(size - 1) * rect.size.height))
-        
-        }
-        
+        drawOvals(rect)
+        drawLines(rect)
     }
     
-    func drawLine(start:CGPoint, end:CGPoint) {
+    func drawOvals(_ rect: CGRect) {
+        
+        let size = CGSize(
+            width: rect.size.width / CGFloat(gridSize.rows),
+            height: rect.size.height / CGFloat(gridSize.cols)
+        )
+        let base = rect.origin
+        (0 ..< gridSize.rows).forEach { i in
+            (0 ..< gridSize.cols).forEach { j in
+                // Inset the oval 2 points from the left and top edges
+                let ovalOrigin = CGPoint(
+                    x: base.x + (CGFloat(j) * size.width) + 2.0,
+                    y: base.y + (CGFloat(i) * size.height + 2.0)
+                )
+                // Make the oval draw 2 points short of the right and bottom edges
+                let ovalSize = CGSize(
+                    width: size.width - 4.0,
+                    height: size.height - 4.0
+                )
+                let ovalRect = CGRect( origin: ovalOrigin, size: ovalSize )
+                drawOval(ovalRect, row: i, col: j)
+            }
+        }
+    }
+    
+    func drawOval(_ ovalRect: CGRect, row:Int, col:Int) {
+        let path = UIBezierPath(ovalIn: ovalRect)
+      
+        var fillColor: UIColor
+        switch StandardEngine.engine.grid[(row, col)] {
+        case .empty: fillColor = self.emptyColor
+        case .alive: fillColor = self.livingColor
+        case .born: fillColor = self.bornColor
+        case .died: fillColor = self.diedColor
+        }
+        
+        fillColor.setFill()
+        path.fill()
+    }
+    
+    func drawLines(_ rect: CGRect) {
         //create the path
+        (0 ..< (gridSize.rows) + 1).forEach {
+            drawLine(
+                start: CGPoint(x: CGFloat($0)/CGFloat(gridSize.rows) * rect.size.width, y: 0.0),
+                end:   CGPoint(x: CGFloat($0)/CGFloat(gridSize.rows) * rect.size.width, y: rect.size.height)
+            )
+            
+            drawLine(
+                start: CGPoint(x: 0.0, y: CGFloat($0)/CGFloat(gridSize.cols) * rect.size.height ),
+                end: CGPoint(x: rect.size.width, y: CGFloat($0)/CGFloat(gridSize.cols) * rect.size.height)
+            )
+        }
+    }
+    
+    func drawLine(start:CGPoint, end: CGPoint) {
         let path = UIBezierPath()
         
         //set the path's line width to the height of the stroke
@@ -75,45 +97,25 @@ import UIKit
         path.stroke()
     }
     
-    func drawCircle(row: Int, col: Int, rect:CGRect) {
-        let path = UIBezierPath(ovalIn: rect)
-        
-        switch grid._cells[row][col].state {
-        case .empty:
-            emptyColor.setFill()
-        case .alive:
-            livingColor.setFill()
-        case .born:
-            bornColor.setFill()
-        case .died:
-            diedColor.setFill()
-        default:
-            break
-        }
-        path.fill()
-    }
-    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         lastTouchedPosition = process(touches: touches)
-        
-        grid._cells[(lastTouchedPosition?.row)!][(lastTouchedPosition?.col)!].state = (grid._cells[(lastTouchedPosition?.row)!][(lastTouchedPosition?.col)!].state.toggle(value: (grid._cells[lastTouchedPosition!.row][lastTouchedPosition!.col].state)))
+
+        StandardEngine.engine.grid[(lastTouchedPosition?.row)!,(lastTouchedPosition?.col)!] = (StandardEngine.engine.grid[(lastTouchedPosition?.row)!,(lastTouchedPosition?.col)!].toggle(value: (StandardEngine.engine.grid[lastTouchedPosition!.row,lastTouchedPosition!.col])))
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         lastTouchedPosition = process(touches: touches)
         
-        grid._cells[(lastTouchedPosition?.row)!][(lastTouchedPosition?.col)!].state = (grid._cells[(lastTouchedPosition?.row)!][(lastTouchedPosition?.col)!].state.toggle(value: (grid._cells[lastTouchedPosition!.row][lastTouchedPosition!.col].state)))
+       StandardEngine.engine.grid[(lastTouchedPosition?.row)!,(lastTouchedPosition?.col)!] = (StandardEngine.engine.grid[(lastTouchedPosition?.row)!,(lastTouchedPosition?.col)!].toggle(value: (StandardEngine.engine.grid[lastTouchedPosition!.row,lastTouchedPosition!.col])))
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         lastTouchedPosition = nil
     }
     
-    // Updated since class
-    typealias Position = (row: Int, col: Int)
-    var lastTouchedPosition: Position?
+    var lastTouchedPosition: GridPosition?
     
-    func process(touches: Set<UITouch>) -> Position? {
+    func process(touches: Set<UITouch>) -> GridPosition? {
         guard touches.count == 1 else { return nil }
         let pos = convert(touch: touches.first!)
         guard lastTouchedPosition?.row != pos.row
@@ -124,15 +126,50 @@ import UIKit
         return pos
     }
     
-    func convert(touch: UITouch) -> Position {
+    func convert(touch: UITouch) -> GridPosition {
         let touchY = touch.location(in: self).y
         let gridHeight = frame.size.height
-        let row = touchY / gridHeight * CGFloat(size)
+        let row = touchY / gridHeight * CGFloat(gridSize.rows)
         let touchX = touch.location(in: self).x
         let gridWidth = frame.size.width
-        let col = touchX / gridWidth * CGFloat(size)
+        let col = touchX / gridWidth * CGFloat(gridSize.cols)
         let position = (row: Int(row), col: Int(col))
         return position
     }
+
+    
+//    // Updated since class
+//    var lastTouchedPosition: GridPosition?
+//    
+//    func process(touches: Set<UITouch>) -> GridPosition? {
+//        guard touches.count == 1 else { return nil }
+//        let pos = convert(touch: touches.first!)
+//        
+//        //************* IMPORTANT ****************
+//        guard lastTouchedPosition?.row != pos.row
+//            || lastTouchedPosition?.col != pos.col
+//            else { return pos }
+//        //****************************************
+//        
+//        if grid != nil {
+//            grid![pos.row, pos.col] = grid![pos.row, pos.col].toggle(value: grid![pos.row, pos.col])
+//            setNeedsDisplay()
+//        }
+//        self.setNeedsDisplay()
+//        
+//        return pos
+//    }
+//    
+//    func convert(touch: UITouch) -> GridPosition {
+//        let touchY = touch.location(in: self).y
+//        let gridHeight = frame.size.height
+//        let row = touchY / gridHeight * CGFloat(gridSize.rows)
+//        
+//        let touchX = touch.location(in: self).x
+//        let gridWidth = frame.size.width
+//        let col = touchX / gridWidth * CGFloat(gridSize.cols)
+//        
+//        return GridPosition(row: Int(row), col: Int(col))
+//    }
 
 }

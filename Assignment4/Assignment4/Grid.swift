@@ -18,6 +18,17 @@ public enum CellState {
         default: return false
         }
     }
+    
+    public func toggle(value:CellState)-> CellState {
+        if (value == .empty || value == .died) {
+            return .alive
+        }
+        return .empty
+    }
+}
+
+public protocol GridViewDataSource {
+    subscript (row: Int, col: Int) -> CellState { get set }
 }
 
 public protocol GridProtocol {
@@ -71,7 +82,7 @@ extension GridProtocol {
     }
 }
 
-public struct Grid: GridProtocol {
+public struct Grid: GridProtocol, GridViewDataSource {
     var _cells: [[CellState]]
     public let size: GridSize
 

@@ -19,7 +19,7 @@ class SimulationViewController: UIViewController, EngineDelegate {
     }
 
     @IBAction func stepButtonTapped(_ sender: Any) {
-        StandardEngine.engine.step()
+        _ = StandardEngine.engine.step()
     }
 
 
