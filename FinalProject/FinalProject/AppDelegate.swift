@@ -16,6 +16,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        let defaults = UserDefaults.standard
+        if let simulationConfiguration = defaults.object(forKey: "simulationConfiguration") as? NSDictionary {
+            ConfigHandler.configurations.configurationsArray.add(simulationConfiguration)
+            let grid = ConfigHandler.gridFromPoints(simulationConfiguration["contents"] as! [[Int]])
+            StandardEngine.engine.grid = grid
+            StandardEngine.engine.postUpdate()
+        }
+        
         return true
     }
 
